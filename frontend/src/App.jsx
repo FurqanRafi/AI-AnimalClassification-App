@@ -117,7 +117,8 @@ function App() {
     formData.append('file', selectedImage);
 
     try {
-      const response = await axios.post('http://localhost:8000/predict', formData, {
+      const apiUrl = import.meta.env.PROD ? '/predict' : 'http://localhost:8000/predict';
+      const response = await axios.post(apiUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

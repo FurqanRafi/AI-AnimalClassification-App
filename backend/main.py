@@ -1,4 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.staticfiles import StaticFiles
+import os
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
@@ -32,9 +34,7 @@ preprocess = weights.transforms()
 categories = weights.meta["categories"]
 print("Model loaded successfully!")
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the PyTorch Image Classification API! Send a POST request to /predict"}
+# Static files will be mounted at the end to avoid intercepting /predict
 
 @app.post("/predict")
 async def predict_image(file: UploadFile = File(...)):
@@ -71,6 +71,13 @@ async def predict_image(file: UploadFile = File(...)):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# Mount the frontend static files for Hugging Face Spaces
+frontend_dist = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'dist')
+if os.path.exists(frontend_dist):
+    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
+else:
+    print(f"Warning: Frontend build directory not found at {frontend_dist}. API only mode.")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
