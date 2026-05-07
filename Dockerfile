@@ -1,5 +1,5 @@
 # Stage 1: Build Frontend
-FROM node:18-alpine AS frontend-builder
+FROM node:22-alpine AS frontend-builder
 WORKDIR /app/frontend
 
 # Copy package files and install dependencies
@@ -21,18 +21,19 @@ USER user
 ENV HOME=/home/user \
     PATH=/home/user/.local/bin:$PATH
 
-WORKDIR $HOME/app/backend
+WORKDIR /home/user/app/backend
 
 # Copy and install backend requirements
 COPY --chown=user backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Adding extra-index-url here avoids issues with Windows CRLF line endings in requirements.txt
+RUN pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
 
 # Copy backend code
 COPY --chown=user backend/ ./
 
 # Copy frontend build from Stage 1 to the location expected by main.py
 # main.py expects frontend at os.path.join(os.path.dirname(__file__), '..', 'frontend', 'dist')
-COPY --chown=user --from=frontend-builder /app/frontend/dist $HOME/app/frontend/dist
+COPY --chown=user --from=frontend-builder /app/frontend/dist /home/user/app/frontend/dist
 
 # Expose the default port for Hugging Face Spaces
 EXPOSE 7860
