@@ -1,3 +1,12 @@
+---
+title: AI AnimalClassification App
+emoji: 📚
+colorFrom: green
+colorTo: blue
+sdk: docker
+pinned: false
+---
+
 # AI Image Classification App
 
 A stunning 3D-enhanced web application for real-time image classification using state-of-the-art neural networks (ResNet-50).
@@ -31,3 +40,5 @@ npm run dev
 Open the provided URL (e.g., `http://localhost:5173`) in your browser to see the beautiful UI!
 
 Enjoy the 3D animations and highly accurate object classification!
+
+Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
