@@ -5,7 +5,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import axios from 'axios';
 
-// --- Abstract AI Tech 3D Background ---
+// now its Edit
 import { Float } from '@react-three/drei';
 
 const FloatingTechNode = ({ position, color, speed, args }) => {
